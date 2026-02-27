@@ -41,3 +41,16 @@ To import sql data file in Windows:
 [path-to-mysql] mysql.exe -h [hostname] -u [username] -p [DATA-BASE-NAME] < [path-to-sql-file]
 
 If you have followed the above steps, you have successfully updated your application. Login to enjoy the services.
+
+PHP 8.x migration notes
+-----------------------
+If you are moving an existing Sentrifugo installation to modern PHP (8.x), apply the following checks after code/database upgrade:
+
+1. Clear application cache and restart PHP-FPM/Apache.
+2. Verify PHPMailer autoloading still works (legacy `__autoload()` is not supported on PHP 8).
+3. Verify email templates that pass through `extras/htmlfilter.php` still render correctly.
+4. Run a syntax validation pass before go-live:
+   php -l data/PHPMailer/PHPMailerAutoload.php
+   php -l install/PHPMailer/PHPMailerAutoload.php
+   php -l application/modules/default/library/PHPMailer/PHPMailerAutoload.php
+5. Re-test critical user flows: login, password reset email, and notifications.

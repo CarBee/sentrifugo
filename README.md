@@ -240,5 +240,8 @@ Table of Contents:
 	2. Run `composer install --no-dev` from the project root.
 	3. Enable ZF3 runtime by setting environment variable `SENTRIFUGO_RUNTIME=zf3`.
 	4. Start migrating modules/config into the `zf3/` structure (`zf3/config/application.config.php`).
+	5. Initial migration scaffold now includes:
+	   - `zf3/module/Application` (home route + controller + view)
+	   - `zf3/config/autoload/global.php` (DB config bridge from existing constants)
 
 	Without `SENTRIFUGO_RUNTIME=zf3`, Sentrifugo continues using the legacy Zend Framework 1 runtime.

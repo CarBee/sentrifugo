@@ -31,8 +31,21 @@ $selectedRuntime = getenv('SENTRIFUGO_RUNTIME');
 if ($selectedRuntime === 'zf3') {
     $composerAutoload = __DIR__ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
     $zf3ConfigPath = __DIR__ . DIRECTORY_SEPARATOR . 'zf3' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'application.config.php';
+    $constantsFiles = array(
+        __DIR__ . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'constants.php',
+        __DIR__ . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'site_constants.php',
+        __DIR__ . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'email_constants.php',
+        __DIR__ . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'db_constants.php',
+        __DIR__ . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'application_constants.php',
+        __DIR__ . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'mail_settings_constants.php',
+    );
 
     if (is_readable($composerAutoload) && is_readable($zf3ConfigPath)) {
+        foreach ($constantsFiles as $constantsFile) {
+            if (is_readable($constantsFile)) {
+                require_once $constantsFile;
+            }
+        }
         require_once $composerAutoload;
         $zf3Config = require $zf3ConfigPath;
 

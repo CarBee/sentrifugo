@@ -7,15 +7,17 @@
  */
 return [
     'modules' => [
-        // Add migrated modules here, e.g. 'Application'
+        'Laminas\\Router',
+        'Laminas\\Validator',
+        'Application',
     ],
     'module_listener_options' => [
         'config_glob_paths' => [
             __DIR__ . '/autoload/{,*.}{global,local}.php',
         ],
         'module_paths' => [
-            './module',
-            './vendor',
+            __DIR__ . '/../module',
+            __DIR__ . '/../../vendor',
         ],
     ],
 ];

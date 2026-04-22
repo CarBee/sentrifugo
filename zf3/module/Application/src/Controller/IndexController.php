@@ -1,0 +1,16 @@
+<?php
+
+namespace Application\Controller;
+
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
+
+class IndexController extends AbstractActionController
+{
+    public function indexAction()
+    {
+        return new ViewModel([
+            'message' => 'ZF3 migration bootstrap is active.',
+        ]);
+    }
+}

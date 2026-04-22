@@ -5,14 +5,15 @@ This repository still contains substantial Zend Framework 1 usage (`Zend_*` clas
 ## Current scan snapshot
 
 - `require_once 'Zend/...';` references in application code: **0**
-- `Zend_*` class references in `application/`: **5589**
+- `Zend_*` class references in `application/`: **4884**
 - `Zend\\...` namespace references in `application/`: **0**
 
 ## What was migrated in this pass
 
 1. Removed all direct `require_once 'Zend/...'` references from application-layer models/helpers.
 2. Kept class usage autoload-driven so migration can continue safely without hard-coded includes.
-3. Preserved runtime behavior while reducing coupling to direct Zend file paths.
+3. Migrated ACL engine in `application/modules/default/plugins/AccessControl.php` from `Zend_Acl` / `Zend_Acl_Resource` to Laminas ACL classes.
+4. Preserved runtime behavior while reducing coupling to direct Zend file paths.
 
 ## Recommended phased migration to Laminas
 

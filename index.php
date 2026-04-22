@@ -135,12 +135,13 @@ catch (PDOException $e)
 				
 				
 				
-				/** Zend_Application */
-				require_once 'Zend/Application.php';
-				
-				
-				    // Create application, bootstrap, and run
-				    $application = new Zend_Application(
+					// Bootstrap legacy application via autoloader (no direct Zend require).
+					if (!class_exists('Zend_Application', false)) {
+					    spl_autoload_call('Zend_Application');
+					}
+
+					    // Create application, bootstrap, and run
+					    $application = new Zend_Application(
 				        APPLICATION_ENV,
 				        APPLICATION_PATH . '/configs/application.ini'
 				    );

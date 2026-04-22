@@ -25,7 +25,6 @@
  * @author sagarsoft
  */
 
-require_once 'Zend/Db/Table/Abstract.php';
 class Timemanagement_Model_Mailslist extends Zend_Db_Table_Abstract
 {
 	/**

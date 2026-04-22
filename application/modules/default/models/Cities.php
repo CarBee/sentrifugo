@@ -19,7 +19,6 @@
  *  Sentrifugo Support <support@sentrifugo.com>
  ********************************************************************************/
 
-require_once 'Zend/Db/Table/Abstract.php';
 class Default_Model_Cities extends Zend_Db_Table_Abstract
 {
     protected $_name = 'main_cities';

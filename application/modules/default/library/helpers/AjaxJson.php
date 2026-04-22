@@ -24,7 +24,6 @@
  * @author Manjunath
  * @version
  */
-require_once 'Zend/View/Interface.php';
 
 /**
  * AjaxJson helper
@@ -56,7 +55,6 @@ class Zend_View_Helper_AjaxJson extends Zend_View_Helper_Abstract
 
 		$data = Zend_Json::encode($data, null, $options);
 		if (!$keepLayouts) {
-			require_once 'Zend/Layout.php';
 			$layout = Zend_Layout::getMvcInstance();
 			if ($layout instanceof Zend_Layout) {
 				$layout->disableLayout();

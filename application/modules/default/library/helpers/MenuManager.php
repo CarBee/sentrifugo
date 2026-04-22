@@ -24,7 +24,6 @@
  * @author Manjunath
  * @version
  */
-require_once 'Zend/View/Interface.php';
 
 /**
  * AjaxJson helper

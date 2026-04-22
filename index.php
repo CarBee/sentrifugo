@@ -83,8 +83,9 @@ try {
 		$codeversion = '';
 		$codeid = '';
 	    $stmt1 = $mysqlPDO->prepare("select * from main_patches_version where isactive=1 ");
-	    $stmt2 = $mysqlPDO->prepare("select * from main_patches_version where version ='".CODEVERSION."' and isactive=1  ");
+	    $stmt2 = $mysqlPDO->prepare("select * from main_patches_version where version = :version and isactive=1");
 	    $stmt1->execute();
+	    $stmt2->bindValue(':version', (string) CODEVERSION, PDO::PARAM_STR);
 	    $stmt2->execute();
 	    $dbdataArray = $stmt1->fetch();
 	    $codedataArray = $stmt2->fetch();
@@ -148,12 +149,12 @@ catch (PDOException $e)
 			}else 
 			{?>
 				
-				<form name="upgrade" id="upgrade" action="upgrade.php" method="post" class="frm_install">
-				       <input type = 'hidden' value='<?php echo $codeversion;?>' name='codeversion' id='codeversion'>
-				       <input type = 'hidden' value='<?php echo $dbversion;?>' name='dbversion' id='dbversion'>
-				       <input type = 'hidden' value='<?php echo $dbid;?>' name='dbid' id='dbid'>
-				       <input type = 'hidden' value='<?php echo $codeid;?>' name='codeid' id='codeid'>
-				</form>
+					<form name="upgrade" id="upgrade" action="upgrade.php" method="post" class="frm_install">
+					       <input type = 'hidden' value='<?php echo htmlspecialchars((string)$codeversion, ENT_QUOTES, 'UTF-8');?>' name='codeversion' id='codeversion'>
+					       <input type = 'hidden' value='<?php echo htmlspecialchars((string)$dbversion, ENT_QUOTES, 'UTF-8');?>' name='dbversion' id='dbversion'>
+					       <input type = 'hidden' value='<?php echo htmlspecialchars((string)$dbid, ENT_QUOTES, 'UTF-8');?>' name='dbid' id='dbid'>
+					       <input type = 'hidden' value='<?php echo htmlspecialchars((string)$codeid, ENT_QUOTES, 'UTF-8');?>' name='codeid' id='codeid'>
+					</form>
 				<script>
 					document.getElementById('upgrade').submit();
 				</script>

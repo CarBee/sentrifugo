@@ -53,11 +53,6 @@ if ($selectedRuntime === 'zf3') {
             Laminas\Mvc\Application::init($zf3Config)->run();
             exit;
         }
-
-        if (class_exists('\\Zend\\Mvc\\Application')) {
-            Zend\Mvc\Application::init($zf3Config)->run();
-            exit;
-        }
     }
 }
    

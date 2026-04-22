@@ -237,7 +237,7 @@ Table of Contents:
 	Sentrifugo now includes a Zend Framework 3 compatible runtime entrypoint using Laminas MVC.
 
 	1. Install Composer from https://getcomposer.org/
-	2. Run `composer install --no-dev` from the project root.
+	2. Run `composer install --no-dev` from the project root (uses Laminas MVC `^3.8` on PHP `^8.1`).
 	3. Enable ZF3 runtime by setting environment variable `SENTRIFUGO_RUNTIME=zf3`.
 	4. Start migrating modules/config into the `zf3/` structure (`zf3/config/application.config.php`).
 	5. Initial migration scaffold now includes:

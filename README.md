@@ -19,6 +19,7 @@ Table of Contents:
 3. Linux installation Guide 
 4. MAC installation Guide 
 5. Upgrading your application code with patches
+6. Upgrading to Zend Framework 3 (Laminas MVC runtime)
 
 	1. What server does Sentrifugo work on?
 	=======================================
@@ -51,8 +52,8 @@ Table of Contents:
 		--------------
 		The system requirements for installing Sentrifugo are described below. Make sure your system meets these requirements.
 
-		a. PHP 5.3 or later
-			You can download PHP 5.3 or later by visiting http://windows.php.net/download/
+		a. PHP 8.2 or later (PHP 8.3 recommended)
+			You can download supported PHP builds from https://windows.php.net/download/.
 
 		b. PDO MySQL (for MySQL connection) 
 			To install Sentrifugo on windows, you need to enable the PDO and PDO_MYSQL extensions in your php.ini file. You can add the following
@@ -117,11 +118,9 @@ Table of Contents:
 		--------------
 		The system requirements for installing Sentrifugo are described below. Make sure your system meets these requirements.
 
-		a. PHP 5.3 or later
-			To install PHP 5.3 on Linux, please follow the below links:
-
-			For Ubuntu: https://www.digitalocean.com/community/tutorials/how-to-install-linux-apache-mysql-php-lamp-stack-on-ubuntu
-			For Redhat and CentOS: http://www.thetechnicalstuff.com/install-php5-3-in-centos-and-redhat/
+		a. PHP 8.2 or later (PHP 8.3 recommended)
+			Install PHP with your distro package manager (or official repositories) and enable Apache/PHP-FPM integration.
+			Recommended packages/extensions include: pdo_mysql, gd, openssl, mbstring, and intl.
 
 		b. PDO MySQL (for MySQL connection) 
 			To install Sentrifugo on Linux, you can compile php with --with-pdo-mysql in your php.ini, and add the following lines:
@@ -175,8 +174,8 @@ Table of Contents:
 		--------------
 		The system requirements for installing Sentrifugo are described below. Make sure your system meets these requirements.
 
-		a. PHP 5.3 or later
-			You can download PHP 5.3 or later by visiting http://php.net/downloads.php
+		a. PHP 8.2 or later (PHP 8.3 recommended)
+			You can download supported PHP builds from https://www.php.net/downloads.php
 
 		b. PDO MySQL (for MySQL connection) 
 			To install Sentrifugo on MAC, you need to enable the PDO and PDO_MYSQL extensions in your php.ini file. You can add the following lines in 
@@ -231,5 +230,15 @@ Table of Contents:
 	NOTE:
 	Once you login to the application, update any role in Human Resources -> User Management -> Roles and Privileges page.
 
-	Refer UPGRADE document for a detailed description of the installation process of patches.
+		Refer UPGRADE document for a detailed description of the installation process of patches.
 
+	6. Upgrading to Zend Framework 3 (Laminas MVC runtime)
+	======================================================
+	Sentrifugo now includes a Zend Framework 3 compatible runtime entrypoint using Laminas MVC.
+
+	1. Install Composer from https://getcomposer.org/
+	2. Run `composer install --no-dev` from the project root.
+	3. Enable ZF3 runtime by setting environment variable `SENTRIFUGO_RUNTIME=zf3`.
+	4. Start migrating modules/config into the `zf3/` structure (`zf3/config/application.config.php`).
+
+	Without `SENTRIFUGO_RUNTIME=zf3`, Sentrifugo continues using the legacy Zend Framework 1 runtime.

@@ -1,0 +1,13 @@
+{
+    "name": "sentrifugo/sentrifugo",
+    "description": "Sentrifugo HRMS",
+    "type": "project",
+    "license": "GPL-3.0-or-later",
+    "require": {
+        "laminas/laminas-mvc": "^3.7",
+        "laminas/laminas-zendframework-bridge": "^1.8"
+    },
+    "config": {
+        "sort-packages": true
+    }
+}

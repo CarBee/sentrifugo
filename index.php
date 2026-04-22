@@ -25,6 +25,28 @@ if(file_exists($filepath))
 header("Location: install/index.php");  
 }else
 {
+// Optional modern runtime: Zend Framework 3 successor (Laminas MVC).
+// Set SENTRIFUGO_RUNTIME=zf3 to boot the ZF3/Laminas stack.
+$selectedRuntime = getenv('SENTRIFUGO_RUNTIME');
+if ($selectedRuntime === 'zf3') {
+    $composerAutoload = __DIR__ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+    $zf3ConfigPath = __DIR__ . DIRECTORY_SEPARATOR . 'zf3' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'application.config.php';
+
+    if (is_readable($composerAutoload) && is_readable($zf3ConfigPath)) {
+        require_once $composerAutoload;
+        $zf3Config = require $zf3ConfigPath;
+
+        if (class_exists('\\Laminas\\Mvc\\Application')) {
+            Laminas\Mvc\Application::init($zf3Config)->run();
+            exit;
+        }
+
+        if (class_exists('\\Zend\\Mvc\\Application')) {
+            Zend\Mvc\Application::init($zf3Config)->run();
+            exit;
+        }
+    }
+}
    
 try
 {
@@ -89,11 +111,18 @@ catch (PDOException $e)
 		{
 			if($dbid == $codeid)
 			{
-				// Ensure library/ is on include_path
-				set_include_path(implode(PATH_SEPARATOR, array(
-				    realpath(APPLICATION_PATH . '/library'),
-				    get_include_path(),
-				)));
+					// Ensure library/ paths are on include_path for legacy ZF1 runtime.
+					$includePaths = array();
+					$applicationLibraryPath = realpath(APPLICATION_PATH . '/library');
+					if ($applicationLibraryPath !== false) {
+					    $includePaths[] = $applicationLibraryPath;
+				}
+				$projectRootPath = realpath(__DIR__);
+				if ($projectRootPath !== false) {
+				    $includePaths[] = $projectRootPath;
+				}
+				$includePaths[] = get_include_path();
+				set_include_path(implode(PATH_SEPARATOR, $includePaths));
 				
 				
 				

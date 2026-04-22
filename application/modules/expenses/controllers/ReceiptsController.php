@@ -132,14 +132,13 @@ class Expenses_ReceiptsController extends Zend_Controller_Action
 		$file_path = EXPENSES_RECEIPTS_PATH;
 		$archive_file_name = time().rand(8,8).'.zip';
 		
-		$zip = new ZipArchive();
-		if ($zip->open($file_path.$archive_file_name, ZIPARCHIVE::CREATE )!==TRUE) {
-		  exit("cannot open <$archive_file_name>\n");
-
-		}
-
+		$zip = sapp_Utils::createZipArchive($file_path.$archive_file_name, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 		foreach($file_names as $files){
-		  $zip->addFile($file_path.$files,$files);
+		  $safeFileName = basename($files);
+		  $fullPath = $file_path.$safeFileName;
+		  if (is_readable($fullPath) && is_file($fullPath)) {
+		      $zip->addFile($fullPath, $safeFileName);
+		  }
 		}
 		$zip->close();
 
@@ -404,4 +403,3 @@ class Expenses_ReceiptsController extends Zend_Controller_Action
 		$this->_helper->json(array('message'=>'success','status'=> 'Expense Added To Trip.'));
 	}
 }
-

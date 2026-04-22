@@ -134,9 +134,7 @@ class sapp_Global
          */
         public static function export_to_excel($final_array,$column_array,$filename)
         {
-            require_once 'Classes/PHPExcel.php';
-            require_once 'Classes/PHPExcel/IOFactory.php';
-            $objPHPExcel = new PHPExcel();
+            $objPHPExcel = sapp_Utils::createExcelWorkbook();
 
             $letters = range('A','Z');
             $count =0;
@@ -189,7 +187,7 @@ class sapp_Global
             header('Cache-Control: max-age=0');
             self::clean_output_buffer();
 			
-            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+            $objWriter = sapp_Utils::createExcelWriter($objPHPExcel, 'Excel2007');
             $objWriter->save('php://output');
             
         }

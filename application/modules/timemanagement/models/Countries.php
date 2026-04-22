@@ -19,7 +19,6 @@
  *  Sentrifugo Support <support@sentrifugo.com>
  ********************************************************************************/
 
-require_once 'Zend/Db/Table/Abstract.php';
 
 class Timemanagement_Model_Countries extends Zend_Db_Table_Abstract
 {

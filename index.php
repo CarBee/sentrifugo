@@ -25,6 +25,36 @@ if(file_exists($filepath))
 header("Location: install/index.php");  
 }else
 {
+// Optional modern runtime: Zend Framework 3 successor (Laminas MVC).
+// Set SENTRIFUGO_RUNTIME=zf3 to boot the ZF3/Laminas stack.
+$selectedRuntime = getenv('SENTRIFUGO_RUNTIME');
+if ($selectedRuntime === 'zf3') {
+    $composerAutoload = __DIR__ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+    $zf3ConfigPath = __DIR__ . DIRECTORY_SEPARATOR . 'zf3' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'application.config.php';
+    $constantsFiles = array(
+        __DIR__ . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'constants.php',
+        __DIR__ . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'site_constants.php',
+        __DIR__ . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'email_constants.php',
+        __DIR__ . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'db_constants.php',
+        __DIR__ . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'application_constants.php',
+        __DIR__ . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'mail_settings_constants.php',
+    );
+
+    if (is_readable($composerAutoload) && is_readable($zf3ConfigPath)) {
+        foreach ($constantsFiles as $constantsFile) {
+            if (is_readable($constantsFile)) {
+                require_once $constantsFile;
+            }
+        }
+        require_once $composerAutoload;
+        $zf3Config = require $zf3ConfigPath;
+
+        if (class_exists('\\Laminas\\Mvc\\Application')) {
+            Laminas\Mvc\Application::init($zf3Config)->run();
+            exit;
+        }
+    }
+}
    
 try
 {
@@ -53,8 +83,9 @@ try {
 		$codeversion = '';
 		$codeid = '';
 	    $stmt1 = $mysqlPDO->prepare("select * from main_patches_version where isactive=1 ");
-	    $stmt2 = $mysqlPDO->prepare("select * from main_patches_version where version ='".CODEVERSION."' and isactive=1  ");
+	    $stmt2 = $mysqlPDO->prepare("select * from main_patches_version where version = :version and isactive=1");
 	    $stmt1->execute();
+	    $stmt2->bindValue(':version', (string) CODEVERSION, PDO::PARAM_STR);
 	    $stmt2->execute();
 	    $dbdataArray = $stmt1->fetch();
 	    $codedataArray = $stmt2->fetch();
@@ -89,20 +120,28 @@ catch (PDOException $e)
 		{
 			if($dbid == $codeid)
 			{
-				// Ensure library/ is on include_path
-				set_include_path(implode(PATH_SEPARATOR, array(
-				    realpath(APPLICATION_PATH . '/library'),
-				    get_include_path(),
-				)));
+					// Ensure library/ paths are on include_path for legacy ZF1 runtime.
+					$includePaths = array();
+					$applicationLibraryPath = realpath(APPLICATION_PATH . '/library');
+					if ($applicationLibraryPath !== false) {
+					    $includePaths[] = $applicationLibraryPath;
+				}
+				$projectRootPath = realpath(__DIR__);
+				if ($projectRootPath !== false) {
+				    $includePaths[] = $projectRootPath;
+				}
+				$includePaths[] = get_include_path();
+				set_include_path(implode(PATH_SEPARATOR, $includePaths));
 				
 				
 				
-				/** Zend_Application */
-				require_once 'Zend/Application.php';
-				
-				
-				    // Create application, bootstrap, and run
-				    $application = new Zend_Application(
+					// Bootstrap legacy application via autoloader (no direct Zend require).
+					if (!class_exists('Zend_Application', false)) {
+					    spl_autoload_call('Zend_Application');
+					}
+
+					    // Create application, bootstrap, and run
+					    $application = new Zend_Application(
 				        APPLICATION_ENV,
 				        APPLICATION_PATH . '/configs/application.ini'
 				    );
@@ -111,12 +150,12 @@ catch (PDOException $e)
 			}else 
 			{?>
 				
-				<form name="upgrade" id="upgrade" action="upgrade.php" method="post" class="frm_install">
-				       <input type = 'hidden' value='<?php echo $codeversion;?>' name='codeversion' id='codeversion'>
-				       <input type = 'hidden' value='<?php echo $dbversion;?>' name='dbversion' id='dbversion'>
-				       <input type = 'hidden' value='<?php echo $dbid;?>' name='dbid' id='dbid'>
-				       <input type = 'hidden' value='<?php echo $codeid;?>' name='codeid' id='codeid'>
-				</form>
+					<form name="upgrade" id="upgrade" action="upgrade.php" method="post" class="frm_install">
+					       <input type = 'hidden' value='<?php echo htmlspecialchars((string)$codeversion, ENT_QUOTES, 'UTF-8');?>' name='codeversion' id='codeversion'>
+					       <input type = 'hidden' value='<?php echo htmlspecialchars((string)$dbversion, ENT_QUOTES, 'UTF-8');?>' name='dbversion' id='dbversion'>
+					       <input type = 'hidden' value='<?php echo htmlspecialchars((string)$dbid, ENT_QUOTES, 'UTF-8');?>' name='dbid' id='dbid'>
+					       <input type = 'hidden' value='<?php echo htmlspecialchars((string)$codeid, ENT_QUOTES, 'UTF-8');?>' name='codeid' id='codeid'>
+					</form>
 				<script>
 					document.getElementById('upgrade').submit();
 				</script>

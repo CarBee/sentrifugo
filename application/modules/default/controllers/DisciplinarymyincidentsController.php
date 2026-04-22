@@ -305,7 +305,7 @@ public function saveemployeeappealAction()
         $file_name_params_array = array('Disciplinary_Incident');
         $file_name = $this->_helper->PdfHelper->generateFileName($file_name_params_array);
         //mpdf
-        require_once 'MPDF57/mpdf.php';
+        sapp_Utils::loadMPdf();
         $mpdf=new mPDF('', 'A4', 14, '', 10, 10, 12, 12, 6, 6);
         $mpdf->SetDisplayMode('fullpage');
         $mpdf->list_indent_first_level = 0;

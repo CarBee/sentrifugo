@@ -19,7 +19,7 @@
  *  Sentrifugo Support <support@sentrifugo.com>
  ********************************************************************************/
 function getPHPVersion() {
-	$prereq = array('php'   => '5.3',
+	$prereq = array('php'   => '8.2',
                         'mysql' => '5.0');
         return $prereq['php'];
     }                        
@@ -36,13 +36,17 @@ $req_arr = array(
 			'pdo_mysql' => extension_loaded('pdo_mysql'),
 			'gd' => extension_loaded('gd'),
             'openssl' => extension_loaded('openssl'),
+            'mbstring' => extension_loaded('mbstring'),
+            'intl' => extension_loaded('intl'),
 );
 
 $req_html_arr = array(
-		'php' => "PHP v5.3 or greater",
+		'php' => "PHP v8.2 or greater",
 		"pdo_mysql" => "PDO-Mysql extension for PHP (pdo_mysql)",
 		"gd" => "GD Library (gd)",
-        'openssl' => "Open SSL (openssl)"
+        'openssl' => "Open SSL (openssl)",
+        'mbstring' => "Multibyte String extension (mbstring)",
+        'intl' => "Internationalization extension (intl)"
 );
 $stat_arr = array(0=> "No",1 => "Yes");
 chdir("../");
@@ -89,7 +93,11 @@ $writable_paths = array(
 				    <?php } else if($req == 'gd') {?>
 		                   <a href="<?php echo GDURL;?>" target="_blank" style="text-decoration: none;"><div class="error-txt" id = "phplink">GD Library module is disabled in your php.ini file.</div></a>	
 		             <?php } else if($req == 'openssl') {?>
-		                   <a href="<?php echo OPENSSLURL;?>" target="_blank" style="text-decoration: none;"><div class="error-txt" id = "phplink">Open SSL module is disabled in your php.ini file.</div></a>                        
+		                   <a href="<?php echo OPENSSLURL;?>" target="_blank" style="text-decoration: none;"><div class="error-txt" id = "phplink">Open SSL module is disabled in your php.ini file.</div></a>
+                    <?php } else if($req == 'mbstring') {?>
+                           <a href="https://www.php.net/manual/en/mbstring.installation.php" target="_blank" style="text-decoration: none;"><div class="error-txt" id = "phplink">mbstring extension is disabled in your php.ini file.</div></a>
+                    <?php } else if($req == 'intl') {?>
+                           <a href="https://www.php.net/manual/en/intl.installation.php" target="_blank" style="text-decoration: none;"><div class="error-txt" id = "phplink">intl extension is disabled in your php.ini file.</div></a>
 			<?php }}?> 
 		</li>
 <?php 		

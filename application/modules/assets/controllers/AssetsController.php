@@ -768,15 +768,14 @@ class Assets_AssetsController extends Zend_Controller_Action
 	function zipFilesDownload($imgNames){
 		$file_path = ASSETS_IMAGES_TEMP_PATH;
 		$archive_file_name = time().rand(8,8).'.zip';
-	
-		$zip = new ZipArchive();
-		if ($zip->open($file_path.$archive_file_name, ZIPARCHIVE::CREATE )!==TRUE) {
-			exit("cannot open <$archive_file_name>\n");
-	
-		}
-	
+
+		$zip = sapp_Utils::createZipArchive($file_path.$archive_file_name, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 		foreach($imgNames as $files){
-			$zip->addFile($file_path.$files,$files);
+			$safeFileName = basename($files);
+			$fullPath = $file_path.$safeFileName;
+			if (is_readable($fullPath) && is_file($fullPath)) {
+				$zip->addFile($fullPath, $safeFileName);
+			}
 		}
 		$zip->close();
 	

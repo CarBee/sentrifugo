@@ -771,7 +771,7 @@ class Expenses_TripsController extends Zend_Controller_Action
 				$file_name = $this->_helper->PdfHelper->generateFileName($file_name_params_array); */
 				$file_name = $data[0]['trip_name'];
 				//mpdf
-				require_once 'MPDF57/mpdf.php';
+				sapp_Utils::loadMPdf();
 				$mpdf=new mPDF('', 'A4', 14, '', 10, 10, 12, 12, 6, 6);
 				$mpdf->SetDisplayMode('fullpage');
 				
@@ -792,4 +792,3 @@ class Expenses_TripsController extends Zend_Controller_Action
     }
 
 }
-

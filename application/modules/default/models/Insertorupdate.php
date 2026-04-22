@@ -60,7 +60,6 @@ class Default_Model_Insertorupdate extends Zend_Db_Table_Abstract
                             $i++;
                         } else {
                             /** @see Zend_Db_Adapter_Exception */
-                            require_once 'Zend/Db/Adapter/Exception.php';
                             throw new Zend_Db_Adapter_Exception(get_class($db) ." doesn't support positional or named binding");
                         }
                     }

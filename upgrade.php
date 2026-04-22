@@ -51,22 +51,18 @@ require_once 'public/constants.php';
 <?php  
 
 $file = PARENTDOMAIN;
-$file_headers = @get_headers($file);
-if($file_headers[0] == 'HTTP/1.1 404 Not Found') {
-    $exists = false;
-}
-else {
-    $exists = true;
-}
+$httpContext = stream_context_create(array('http' => array('method' => 'HEAD', 'timeout' => 5)));
+$file_headers = @get_headers($file, 0, $httpContext);
+$exists = is_array($file_headers) && isset($file_headers[0]) && strpos($file_headers[0], '404') === false;
 if($exists)
 {
 		if(!empty($_POST))
 		{
-		     $codeversion = isset($_POST['codeversion'])?$_POST['codeversion']:'';
-		     $dbversion = isset($_POST['dbversion'])?$_POST['dbversion']:'';
-			 $dbid = isset($_POST['dbid'])?$_POST['dbid']:'';
-			 $codeid = isset($_POST['codeid'])?$_POST['codeid']:'';
-			if($codeversion !='' && $dbversion !='' && $dbid !='' && $codeid !='')
+		     $codeversion = isset($_POST['codeversion']) ? preg_replace('/[^0-9.]/', '', (string)$_POST['codeversion']) : '';
+		     $dbversion = isset($_POST['dbversion']) ? preg_replace('/[^0-9.]/', '', (string)$_POST['dbversion']) : '';
+			 $dbid = isset($_POST['dbid']) ? (int)$_POST['dbid'] : 0;
+			 $codeid = isset($_POST['codeid']) ? (int)$_POST['codeid'] : 0;
+			if($codeversion !== '' && $dbversion !== '' && $dbid > 0 && $codeid > 0)
 			{
 			?>
             			<?php if($codeid > $dbid){?>
@@ -75,7 +71,7 @@ if($exists)
             						Please take a backup of database and code before upgarding the system.	
             					</div>
                                 <div class="upgrade-div">
-	            					<div id='upgradedb' onclick="upgradesystem('<?php echo WEBSERVICEURL;?>','db','<?php echo $codeversion;?>','<?php echo $dbversion;?>')"><span>UPGRADE DATABASE</span></div>
+	            					<div id='upgradedb' onclick="upgradesystem(<?php echo json_encode((string)WEBSERVICEURL);?>,'db',<?php echo json_encode((string)$codeversion);?>,<?php echo json_encode((string)$dbversion);?>)"><span>UPGRADE DATABASE</span></div>
             					</div>
             			<?php }else if($codeid < $dbid){?>
             					<div class="show-text">
@@ -83,7 +79,7 @@ if($exists)
 									 Please take a backup of your database and code and upgrade the system.
             					</div>
             					<div class="upgrade-div">
-	                                <div id='upgradecode' onclick="upgradesystem('<?php echo WEBSERVICEURL;?>','code','<?php echo $codeversion;?>','<?php echo $dbversion;?>')"><span>UPGRADE CODE</span></div>
+	                                <div id='upgradecode' onclick="upgradesystem(<?php echo json_encode((string)WEBSERVICEURL);?>,'code',<?php echo json_encode((string)$codeversion);?>,<?php echo json_encode((string)$dbversion);?>)"><span>UPGRADE CODE</span></div>
                                 </div>
             			<?php }?>
             			
@@ -92,7 +88,7 @@ if($exists)
 			<div id ='successpan' class=""></div>
 				<?php if($codeversion !='' && $dbversion !=''){ ?>
 					<script>
-						comapareversions('<?php echo WEBSERVICEURL;?>','<?php echo $codeversion;?>','<?php echo $dbversion;?>');
+						comapareversions(<?php echo json_encode((string)WEBSERVICEURL);?>,<?php echo json_encode((string)$codeversion);?>,<?php echo json_encode((string)$dbversion);?>);
 					</script>
 					
 					<?php }else{?>	

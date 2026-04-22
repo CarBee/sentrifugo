@@ -1,4 +1,5 @@
-<?php 
+<?php
+use Laminas\Permissions\Acl\Acl;
 /********************************************************************************* 
  *  This file is part of Sentrifugo.
  *  Copyright (C) 2014 Sapplica
@@ -37,7 +38,7 @@ class Default_Plugin_SecurityCheck extends Zend_Controller_Plugin_Abstract
     public function preDispatch (Zend_Controller_Request_Abstract $request)
     {
     
-    	$storage = new Zend_Auth_Storage_Session();
+    	$storage = Zend_Auth::getInstance()->getStorage();
        	$data = $storage->read();
        		
         $this->_controller = $this->getRequest()->getControllerName();
@@ -109,7 +110,7 @@ class Default_Plugin_SecurityCheck extends Zend_Controller_Plugin_Abstract
 					'login' => 'failed'
 				);
 				
-			$jsonData = Zend_Json::encode($content);
+			$jsonData = json_encode($content);
 				$this->getResponse()
 					 ->setHeader('Content-Type', 'text/json')
 					 ->setBody($jsonData)
@@ -156,14 +157,14 @@ class Default_Plugin_SecurityCheck extends Zend_Controller_Plugin_Abstract
      * Check permission using Zend_Auth and Zend_Acl
      * 
      * @param Zend_Auth $auth
-     * @param Zend_Acl $acl
+     * @param Acl $acl
      * @return boolean
      */
-    private function _isAllowed(Zend_Auth $auth, Zend_Acl $acl) 
+    private function _isAllowed(Zend_Auth $auth, Acl $acl) 
     {
     	if (empty($auth) || empty($acl) ||
     		!($auth instanceof Zend_Auth) ||
-    		 !($acl instanceof Zend_Acl)) {
+    		 !($acl instanceof Acl)) {
     			return false;
     	}
     	$resources= array (
@@ -178,7 +179,7 @@ class Default_Plugin_SecurityCheck extends Zend_Controller_Plugin_Abstract
     			$result= $acl->isAllowed($this->_role,$res);
     		}
     	}    
-    	$storage = new Zend_Auth_Storage_Session();
+    	$storage = Zend_Auth::getInstance()->getStorage();
         $data = $storage->read();
     	return true;
     	return $result;
